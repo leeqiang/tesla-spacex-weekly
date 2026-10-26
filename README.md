@@ -8,8 +8,9 @@ https://leeqiang.github.io/tesla-spacex-weekly/
 - `content/YYYY-MM-DD.md` — 每期周报的 Markdown 原文（唯一需要编辑的地方）
 - `reports/YYYY-MM-DD.html` — 由脚本生成的报告页
 - `index.html` — 由脚本生成的首页（最新一期 + 全部往期，按日期倒序）
+- `essays/YYYY-MM-DD-slug.md` — 长文精读 Markdown；生成 `essays/<slug>.html` 与 `essays/index.html`
 - `assets/style.css` — 共享样式（自动适配浅色/深色模式）
-- `build.py` — 生成脚本（仅用 Python 3 标准库，无需安装依赖）
+- `build.py` — 生成脚本（仅用 Python 3 标准库，无需安装依赖；同时构建周报与长文）
 
 ## 添加新一期
 
