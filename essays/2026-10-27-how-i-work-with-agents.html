@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>我如何与 Agent 协作：Thorsten Ball「How I work with Agents (as of October 2026)」精读</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="../">Tesla &amp; SpaceX 周报</a><nav class="site-nav"><a href="../">周报</a><a href="./">长文精读</a></nav><a class="back" href="./">← 全部长文</a>
+</div></header>
+<main class="wrap">
+<article class="report essay"><p class="date"><time datetime="2026-10-27">2026年10月27日</time></p><h1>我如何与 Agent 协作：Thorsten Ball「How I work with Agents (as of October 2026)」精读</h1>
+<aside class="callout"><p><strong>说明</strong>：这是阅读笔记 / 精读摘要，不是全文翻译。观点归原作者所有，建议对照原文阅读。</p></aside>
+<p><strong>原文链接</strong>：<a href="https://x.com/thorstenball/status/2114386050638336082" target="_blank" rel="noopener noreferrer">X 原帖</a>（Thorsten Ball @thorstenball）</p>
+<p>Thorsten Ball 在 Amp 每天和编码 Agent 一起工作。这篇是他截至 2026 年 10 月的工作方式快照，一共 15 条。</p>
+<section class="sec-other"><h2>1. 用最新最强的模型</h2>
+<p>便宜或旧的模型看着省钱，其实浪费时间：它的输出可能 90% 是对的，但你不知道错的是哪 10%，结果只能逐行检查。最强的模型才值得你信任，也才能真的放手。</p>
+</section>
+<section class="sec-other"><h2>2. 别过度担心 slop</h2>
+<p>「Agent 写出来的代码是垃圾、没法维护」，这话六个月前也许成立。现在作者不再相信 Agent 一定会让代码库变得无法维护。</p>
+</section>
+<section class="sec-other"><h2>3. 提示里写 What，不写 How</h2>
+<p>描述你要的终态，而不是步骤。比如「把这个字节码编译器 / VM 尽可能优化，直到快 2 倍为止」。目标和验收标准讲清楚，路径交给 Agent 去找。</p>
+</section>
+<section class="sec-other"><h2>4. 让整个 SDLC 对 Agent 可见</h2>
+<p>工具调用能压住幻觉：Agent 能自己去查真实情况，就不用靠猜。它应该能跑端到端测试、看生产日志、部署、灰度发布、发版、开关 feature flag、做 triage，甚至给客户发邮件。原则是：<strong>你能看到的东西，Agent 也应该能看到。</strong></p>
+</section>
+<section class="sec-other"><h2>5. 给它 SDLC 工具</h2>
+<p>光有权限不够，还要有趁手的工具。可以写自定义插件：读 bug 报告、给用户发邮件、「系统现在健康吗？」、操作 feature flag 等。</p>
+</section>
+<section class="sec-other"><h2>6. 用实验检验知识有没有被用上</h2>
+<p>AGENTS.md、skills、各种文档会越堆越多，可它们真的被用上了吗？做实验：同时开两个互不知情的 Agent，对照组不给这份知识，实验组给，然后比较结果，看它到底有没有用、有没有被用。</p>
+</section>
+<section class="sec-other"><h2>7. 本地跑多个 Agent 很别扭</h2>
+<p>每个 Agent 都需要能自由安装依赖、启动服务。放在远端环境里很容易，在本地就很难受：端口、数据库、资源都会互相冲突。</p>
+</section>
+<section class="sec-other"><h2>8. 别跟 Agent 来回试错，让它自建迭代工具</h2>
+<p>不要一轮轮手动调。可以让它一次生成 20 个变体，再做一个测试页面并排对比；排查问题时，让它先提出 4 种假设，然后把四种都验证一遍。</p>
+</section>
+<section class="sec-other"><h2>9. 要铁证</h2>
+<p>不要相信「我已经修好了」。要的是证据：操作演示、demo 视频、改动前后的数字。还可以在 AGENTS.md 里写明哪些东西「不算证据」。</p>
+</section>
+<section class="sec-other"><h2>10. 别等 Agent，让 Agent 等你</h2>
+<p>异步工作：给它更大、更有野心的任务，成批交代，不要一来一回地聊。也不要执着于首 token 延迟（TTFT），反正你又不在旁边盯着。</p>
+</section>
+<section class="sec-other"><h2>11. 自动化、定时、唤醒、心跳是杀手锏</h2>
+<p>「两小时后去查一下日志」「上线了告诉我」「每天早上 9 点做一遍」。能定时唤醒、自己跟进的 Agent，价值会高出一个量级。</p>
+</section>
+<section class="sec-other"><h2>12. 别手动管理上下文</h2>
+<p>上下文压缩（compaction）已经好用了。规则很简单：一个线程只做一个任务。线程可长可短，46 条消息可以，3714 条也可以。</p>
+</section>
+<section class="sec-other"><h2>13. 线程就是公司的记忆</h2>
+<p>在 Amp 里，线程会和 git commit 关联。以后有人（或者 Agent）能追溯某处改动当时的思路和讨论，也能避免把同样的活再干一遍。</p>
+</section>
+<section class="sec-other"><h2>14. 少写给人看的文案</h2>
+<p>大多数写给人看的说明文字可以省掉。例外是调试步骤、事故报告，以及一些机械性的文档。</p>
+</section>
+<section class="sec-other"><h2>15. 只审高爆炸半径的代码</h2>
+<p>只亲自审查影响面大的部分，比如那不到 5 个最核心的文件；数据库迁移要审。代码风格、类型、命名、重复代码可以不审，前提是：它能用，有端到端测试，能在架构图的层面看懂，并且一个月后还能改得动。</p>
+<p>---</p>
+<p><strong>一句话总结</strong>：用最强的模型，给它看到并操作整个开发流程的能力，用目标和证据而不是步骤和信任来管理它，然后异步地放手。</p>
+</section></article>
+</main>
+<footer class="site-footer"><div class="wrap">Tesla &amp; SpaceX 周报 · 每周更新</div></footer>
+</body>
+</html>
