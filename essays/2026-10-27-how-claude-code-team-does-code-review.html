@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Claude Code 团队如何做代码审查：Addy Osmani「How the Claude Code team does code review」精读</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="../">Tesla &amp; SpaceX 周报</a><nav class="site-nav"><a href="../">周报</a><a href="./">长文精读</a></nav><a class="back" href="./">← 全部长文</a>
+</div></header>
+<main class="wrap">
+<article class="report essay"><p class="date"><time datetime="2026-10-27">2026年10月27日</time></p><h1>Claude Code 团队如何做代码审查：Addy Osmani「How the Claude Code team does code review」精读</h1>
+<aside class="callout"><p><strong>说明</strong>：这是阅读笔记 / 精读摘要，不是全文翻译。观点归原作者所有，建议对照原文阅读。</p></aside>
+<p><strong>原文链接</strong>：<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener noreferrer">X 原帖</a>（Addy Osmani @addyosmani）</p>
+<p>Addy Osmani 介绍了 Claude Code 团队在「AI 写大部分代码」背景下如何做审查。核心不是少用模型，而是把阅读与机械检查交给自动化，把高风险判断和最终责任留给人。</p>
+<section class="sec-other"><h2>1. AI 写了绝大部分代码，吞吐却更稳</h2>
+<p>团队里大约九成代码由 Claude 写出。从 6 月到 9 月，PR 数量大致翻倍，回滚率反而下降了四成以上。说明关键不在「要不要用 AI 写代码」，而在审查与发布流程能不能跟上产出。</p>
+</section>
+<section class="sec-other"><h2>2. 审查的双重目标：抓 bug，也建共识</h2>
+<p>代码审查不只是找缺陷。它还要让相关人对改动形成共同理解：为什么这么改、风险在哪、上线后怎样观察。缺了共识，合并再快也会在事后付出代价。</p>
+</section>
+<section class="sec-other"><h2>3. 自动化负责「读」，人负责「高风险判断」</h2>
+<p>大量阅读、风格与常规问题可以交给工具与模型。人的时间应集中在危险路径、架构取舍、以及「出了问题谁背锅」这类判断上。自动化不是替代审查，而是把人从低信息密度的通读里解放出来。</p>
+</section>
+<section class="sec-other"><h2>4. 开 PR 之前：先自证，再用子 Agent</h2>
+<p>提交审查前，作者侧先自己跑通证明：改动做了什么、如何验证、边界情况是否覆盖。同时用子 Agent 做一轮预审，把显而易见的问题拦在 PR 打开之前，减轻正式审查的噪音。</p>
+</section>
+<section class="sec-other"><h2>5. 每个 PR：AI 审查 + 安全审查 + CI</h2>
+<p>进入审查队列后，标准动作是三件套：模型做通用代码审查、安全相关检查、以及 CI。这套流水线保证每个变更至少经过同一套最低门槛，而不是依赖某个人是否有空细读。</p>
+</section>
+<section class="sec-other"><h2>6. 按风险定人审深度</h2>
+<p>不是所有 PR 都需要同等强度的人工批准。低风险、可逆、有充分测试的改动可以轻量放行；触及权限、数据、核心路径或难回滚的变更，则要求更强的人工把关。风险分级让人力落在真正贵的地方。</p>
+</section>
+<section class="sec-other"><h2>7. 合并队列、开关与分阶段放量</h2>
+<p>审查通过不等于瞬间全量上线。用 merge queue 串好合并顺序，用 feature flag 控制可见范围，再分阶段放量，把「合进主线」和「对用户生效」拆开。出事时能快速收窄影响面。</p>
+</section>
+<section class="sec-other"><h2>8. 用事故反哺审查 Agent</h2>
+<p>线上事故要回流成评测集：哪些模式当初该被审出、模型或规则漏了什么。把这些案例变成审查 Agent 的 eval，让自动化审查随真实失败持续变强，而不是只靠静态规则。</p>
+</section>
+<section class="sec-other"><h2>9. 人仍握住品味、架构与责任</h2>
+<p>自动化再强，品味、危险路径、架构方向、证据是否充分、以及最终责任，仍归人。模型可以起草意见，不能替人签字。</p>
+</section>
+<section class="sec-other"><h2>10. 原则：你合进来，你负责</h2>
+<p>合并者就是 owner。谁点合并，谁对线上结果负责——包括回滚、跟进与事后复盘。这条原则把速度和问责绑在一起，避免「AI 写的 / 别人审过的」成为推责借口。</p>
+<p>---</p>
+<p><strong>一句话总结</strong>：让模型写大部分代码、自动化读与初审，人按风险把关并背锅；合并权与所有权绑死，吞吐才能涨、回滚还能降。</p>
+</section></article>
+</main>
+<footer class="site-footer"><div class="wrap">Tesla &amp; SpaceX 周报 · 每周更新</div></footer>
+</body>
+</html>
