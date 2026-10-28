@@ -2,7 +2,8 @@
 """Tesla & SpaceX 周报 static site generator.
 
 Converts every content/YYYY-MM-DD.md into reports/YYYY-MM-DD.html,
-every essays/*.md into essays/<slug>.html, and regenerates index pages.
+every essays/*.md into essays/<slug>.html,
+every skills/*.md into skills/<slug>.html, and regenerates index pages.
 Pure standard library: no dependencies.
 Usage: python3 build.py
 """
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
 REPORTS = ROOT / "reports"
 ESSAYS = ROOT / "essays"
+SKILLS = ROOT / "skills"
 SITE_TITLE = "Tesla & SpaceX 周报"
 DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
 ESSAY_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})(?:-.*)?$")
@@ -115,6 +117,10 @@ def convert(md, wrap_sections=True):
         if not line.strip():
             flush_para(); flush_list()
             continue
+        if re.match(r"^---+$", line.strip()):
+            flush_para(); flush_list()
+            out.append("<hr>")
+            continue
         if line.startswith("# "):
             flush_para(); flush_list()
             title = line[2:].strip()
@@ -164,12 +170,14 @@ def convert(md, wrap_sections=True):
     return title, summary, "\n".join(out)
 
 
-def page(title, body, css_href, home_href="./", essays_href="essays/", back_href=None, back_label="← 返回"):
+def page(title, body, css_href, home_href="./", essays_href="essays/",
+         skills_href="skills/", back_href=None, back_label="← 返回"):
     nav_links = (
         '<nav class="site-nav">'
         '<a href="%s">周报</a>'
         '<a href="%s">长文精读</a>'
-        "</nav>" % (home_href, essays_href)
+        '<a href="%s">Skill 周推荐</a>'
+        "</nav>" % (home_href, essays_href, skills_href)
     )
     back = (
         '<a class="back" href="%s">%s</a>' % (back_href, html.escape(back_label))
@@ -225,7 +233,7 @@ def build_reports():
         )
         (REPORTS / ("%s.html" % date)).write_text(
             page(plain(title), article, "../assets/style.css",
-                 home_href="../", essays_href="../essays/",
+                 home_href="../", essays_href="../essays/", skills_href="../skills/",
                  back_href="../", back_label="← 全部周报"),
             encoding="utf-8")
         reports.append((date, plain(title), summary))
@@ -251,7 +259,7 @@ def build_essays():
         )
         (ESSAYS / ("%s.html" % stem)).write_text(
             page(plain(title), article, "../assets/style.css",
-                 home_href="../", essays_href="./",
+                 home_href="../", essays_href="./", skills_href="../skills/",
                  back_href="./", back_label="← 全部长文"),
             encoding="utf-8")
         essays.append((date or "0000-00-00", stem, plain(title), summary))
@@ -276,17 +284,70 @@ def build_essays():
         parts.append("<p>暂无长文。</p>")
     (ESSAYS / "index.html").write_text(
         page("长文精读 · " + SITE_TITLE, "\n".join(parts), "../assets/style.css",
-             home_href="../", essays_href="./"),
+             home_href="../", essays_href="./", skills_href="../skills/"),
         encoding="utf-8")
     print("built essays/index.html (%d essays)" % len(essays))
     return essays
+
+
+
+def build_skills():
+    SKILLS.mkdir(exist_ok=True)
+    skills = []
+    for md_path in sorted(SKILLS.glob("*.md")):
+        stem = md_path.stem
+        date = essay_date(stem)
+        if not date:
+            print("skip (name is not YYYY-MM-DD or YYYY-MM-DD-...):", md_path.name)
+            continue
+        title, summary, body = convert(md_path.read_text(encoding="utf-8"))
+        title = title or stem
+        date_html = (
+            '<p class="date"><time datetime="%s">%s</time></p>' % (date, cn_date(date))
+        )
+        article = (
+            '<article class="report essay">'
+            "%s<h1>%s</h1>\n%s</article>" % (date_html, inline(title), body)
+        )
+        (SKILLS / ("%s.html" % stem)).write_text(
+            page(plain(title), article, "../assets/style.css",
+                 home_href="../", essays_href="../essays/", skills_href="./",
+                 back_href="./", back_label="← 全部 Skill 周推荐"),
+            encoding="utf-8")
+        skills.append((date, stem, plain(title), summary))
+        print("built skills/%s.html" % stem)
+
+    skills.sort(key=lambda e: (e[0], e[1]), reverse=True)
+    parts = [
+        '<h1 class="site-title">Skill 周推荐</h1>',
+        '<p class="tagline">每周从「X 创意想法每日汇总」里精选值得试的 AI Skill，'
+        '便于收藏与安装；带「向未来」标签的适合招生物料、课件、落地页、宣传片。</p>',
+    ]
+    if skills:
+        parts.append('<ul class="report-list">')
+        for date, stem, title, _ in skills:
+            parts.append(
+                '<li><a href="%s.html"><time datetime="%s">%s</time>'
+                '<span>%s</span></a></li>'
+                % (stem, date, date, html.escape(title))
+            )
+        parts.append("</ul>")
+    else:
+        parts.append("<p>暂无 Skill 周推荐。</p>")
+    (SKILLS / "index.html").write_text(
+        page("Skill 周推荐 · " + SITE_TITLE, "\n".join(parts), "../assets/style.css",
+             home_href="../", essays_href="../essays/", skills_href="./"),
+        encoding="utf-8")
+    print("built skills/index.html (%d skills)" % len(skills))
+    return skills
 
 
 def build_home(reports):
     parts = [
         '<h1 class="site-title">%s</h1>' % html.escape(SITE_TITLE),
         '<p class="tagline">每周一份的 Tesla 与 SpaceX 中文简报 · '
-        '<a href="essays/">长文精读</a></p>',
+        '<a href="essays/">长文精读</a> · '
+        '<a href="skills/">Skill 周推荐</a></p>',
     ]
     reports = sorted(reports, key=lambda r: r[0], reverse=True)
     if reports:
@@ -307,7 +368,7 @@ def build_home(reports):
         parts.append("<p>暂无周报。</p>")
     (ROOT / "index.html").write_text(
         page(SITE_TITLE, "\n".join(parts), "assets/style.css",
-             home_href="./", essays_href="essays/"),
+             home_href="./", essays_href="essays/", skills_href="skills/"),
         encoding="utf-8")
     print("built index.html (%d reports)" % len(reports))
 
@@ -315,6 +376,7 @@ def build_home(reports):
 def build():
     reports = build_reports()
     build_essays()
+    build_skills()
     build_home(reports)
 
 
