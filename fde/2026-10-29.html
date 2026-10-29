@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>FDE 专栏 · 第 1 期：什么是 Forward Deployed Engineer，商旅团队该怎么借鉴</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="../">Tesla &amp; SpaceX 周报</a><nav class="site-nav"><a href="../">周报</a><a href="../essays/">长文精读</a><a href="../skills/">Skill 周推荐</a><a href="./">FDE 专栏</a></nav><a class="back" href="./">← 全部 FDE 专栏</a>
+</div></header>
+<main class="wrap">
+<article class="report essay"><p class="date"><time datetime="2026-10-29">2026年10月29日</time></p><h1>FDE 专栏 · 第 1 期：什么是 Forward Deployed Engineer，商旅团队该怎么借鉴</h1>
+<aside class="callout"><p><strong>说明</strong>：本专栏写给强（商旅公司 CTO），聚焦 FDE（Forward Deployed Engineer，前线部署工程师）这一角色。所有事实均附原始出处链接；标「观点」的是我们的解读与建议，不是来源原话。</p></aside>
+<section class="sec-other"><h2>一、FDE 是什么</h2>
+<ul><li><strong>定义</strong>：常驻（或高频驻场）在某一个客户那里、在客户自己的系统和数据上写代码的工程师，考核标准是「客户的业务问题有没有在生产环境里被解决」，而不是工时或 demo。（<a href="https://vladtudor.com/writing/what-is-a-forward-deployed-engineer" target="_blank" rel="noopener noreferrer">Vlad Tudor</a>）</li><li><strong>Palantir 的一句话定义</strong>：普通研发（Dev）是「一个能力，服务很多客户」；FDE（Delta）是「一个客户，用很多能力」。（<a href="https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87" target="_blank" rel="noopener noreferrer">Palantir 博客：Dev versus Delta</a>）</li></ul>
+</section>
+<section class="sec-other"><h2>二、起源：Palantir 的 Echo 与 Delta</h2>
+<ul><li><strong>名字来历</strong>：Palantir 内部把 FDE 叫「Delta」，源自早期业务拓展（Business Development）各小组用北约音标字母命名的传统；Delta 隶属业务拓展部门而非产品研发。（<a href="https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87" target="_blank" rel="noopener noreferrer">Palantir 博客</a>）</li><li><strong>成对出现</strong>：Delta 负责「建」；Echo（Deployment Strategist）负责客户关系、范围和落地采用，包括做培训让产品被足够广泛地使用。几乎所有复制 FDE 的公司也复制了这对搭档。（<a href="https://vladtudor.com/writing/what-is-a-forward-deployed-engineer" target="_blank" rel="noopener noreferrer">Vlad Tudor</a>）</li><li><strong>为什么发明它</strong>：Palantir 前高管 Bob McGrew 在 YC 访谈中说，早期客户（情报机构）每家要的产品都「略有不同」，于是他们做平台而非单品，由 FDE 到现场「修一条碎石路」，再由产品研发团队把它泛化给后面 5–10 个客户，「铺成高速公路」；他把这一策略归功于 Shyam Sankar。他也直言：如果你的业务能标准化规模扩张，就不要用 FDE 模式。（<a href="https://www.youtube.com/watch?v=Zyw-YA0k3xo" target="_blank" rel="noopener noreferrer">YC：The FDE Playbook for AI Startups with Bob McGrew</a>）</li></ul>
+</section>
+<section class="sec-other"><h2>三、为什么 AI 公司现在都在招 FDE</h2>
+<ul><li><strong>需求激增</strong>：据 eWeek 转引《金融时报》与 Indeed 数据，2025 年 1–9 月 FDE 职位发布量增长超过 800%；OpenAI 2024 年初组建 FDE 团队，计划 2025 年扩到约 50 人；Anthropic 计划当年把 Applied AI 团队扩大五倍。案例：OpenAI FDE 为 John Deere 定制精准农业方案，喷药量最多减少 70%。（<a href="https://www.eweek.com/news/openai-anthropic-cohere-ai-hiring/" target="_blank" rel="noopener noreferrer">eWeek, 2025-11-04</a>）</li><li><strong>独立成公司</strong>：2026 年 5 月，OpenAI 宣布成立由外部资本（TPG、Advent 等，40 亿美元、估值 140 亿美元）支持的 The OpenAI Deployment Company，并收购拥有约 150 名 FDE 的英国公司 Tomoro；Anthropic 也宣布与 Blackstone、H&amp;F、高盛等成立类似的 FDE 业务，面向中型企业。（<a href="https://blog.pragmaticengineer.com/the-pulse-forward-deployed-engineering-heats-up-again/" target="_blank" rel="noopener noreferrer">The Pragmatic Engineer</a>）</li><li><strong>岗位长什么样</strong>：Anthropic FDE JD 要求在客户系统内用 Claude 构建生产应用，交付 MCP server、sub-agent、agent skills 等产物，把可复用的部署模式沉淀回产品与研发，出差 25–50%。（<a href="https://job-boards.greenhouse.io/anthropic/jobs/5391016008" target="_blank" rel="noopener noreferrer">Anthropic FDE 招聘（慕尼黑）</a>）Staff 级别要求「不只是实施，而是决定该建什么」，并明说不要求做过 agent 上线，但要有构建和运维生产系统的深厚经验。（<a href="https://job-boards.greenhouse.io/anthropic/jobs/5449229008" target="_blank" rel="noopener noreferrer">Anthropic Staff FDE</a>）</li><li><strong>底层逻辑</strong>：a16z 认为企业买 AI「就像奶奶拿到 iPhone——想用，但需要你帮她设置好」；AI 应用要成为客户的「system of work」，需要深度集成与流程重构，因此早期不该执着于 80% 毛利。（<a href="https://a16z.com/services-led-growth/" target="_blank" rel="noopener noreferrer">a16z：Trading Margin for Moat</a>）</li></ul>
+</section>
+<section class="sec-other"><h2>四、FDE 和解决方案工程师 / 咨询顾问有什么不同</h2>
+<ul><li><strong>vs 咨询顾问</strong>：Palantir 的 Delta 说，顾问一般交付一次性的分析、建议或方案；FDE 与客户一起构建长期方案，让客户能持续改进。（<a href="https://blog.palantir.com/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87" target="_blank" rel="noopener noreferrer">Palantir 博客</a>）</li><li><strong>vs 售前 / 解决方案工程师（观点）</strong>：SE 主要在签约前做演示和方案、偏「证明能用」；FDE 在签约后写生产代码、对业务指标负责，并把现场需求反哺产品。Anthropic JD 也把 FDE 定位为与 Post-Sales、产品、研发协作。</li><li><strong>关键区分</strong>：现场写的代码是否最终被泛化进产品。若每个客户都得到一套只属于它的东西，那就是服务业务，不管叫什么名字。（<a href="https://www.linkedin.com/posts/leighsteedmiddleton_forward-deployed-engineering-is-getting-the-activity-7513951887247794176-MfcS" target="_blank" rel="noopener noreferrer">Leigh Steed-Middleton, LinkedIn</a>）</li></ul>
+</section>
+<section class="sec-other"><h2>五、典型技能与日常</h2>
+<ul><li>能独立在陌生客户环境里写生产代码、做集成（数据、权限、遗留系统）；</li><li>懂 LLM 应用栈（agent、MCP、skills），并跟进模型能力变化（<a href="https://job-boards.greenhouse.io/anthropic/jobs/5391016008" target="_blank" rel="noopener noreferrer">Anthropic JD</a>）；</li><li>面向客户高管与一线用户沟通，在模糊需求下自主推进；</li><li>日常（观点）：在客户现场看业务流程/排障，写集成和 agent，定期把「碎石路」整理成需求反馈给产品团队。</li></ul>
+</section>
+<section class="sec-other"><h2>六、组织与经济账：争议在哪</h2>
+<ul><li><strong>Palantir 自己的账</strong>：2020 年 IPO 文件显示，早期试点「亏损运营」——2019 年第一阶段客户收入 60 万美元、贡献亏损 6540 万美元；建设阶段客户贡献利润率 -43%；只有规模化客户达到 55%。到 2025 年 Palantir 毛利率为 82%。FDE 是投资，靠后续软件收入回本。（<a href="https://tomekchojnacki.com/the-b2b-realist/forward-deployed-billed-by-the-hour/" target="_blank" rel="noopener noreferrer">Tomek Chojnacki</a>）</li><li><strong>怀疑派</strong>：同一文章指出 Palantir 在 2023 年季报中把「our forward-deployed engineers」改成了「our employees」，并转向更省钱的 bootcamp；微软也推出部署团队并称其「超越了所谓 FDE」。（同上）</li><li><strong>决策四问</strong>：嵌入成本能否被客户 LTV 覆盖？复杂度是否真的不可约（而不是产品/文档/onboarding 没做好）？能否建立可复用 playbook 和反馈闭环？对融资叙事有什么影响？（<a href="https://www.futureventures.ca/insights/should-your-scale-up-adopt-the-forward-deployed-engineering-model" target="_blank" rel="noopener noreferrer">Future Ventures</a>）</li></ul>
+</section>
+<section class="sec-other"><h2>七、对商旅 SaaS / 技术团队的启示（观点）</h2>
+<ol><li><strong>大客户先试一个 Delta+Echo 小队</strong>：商旅大客户的差旅政策、审批流、ERP/财务/HR 系统对接各家不同，正是「每家略有不同」的场景。挑 1–2 个战略客户，派 1 名工程师 + 1 名客户成功做试点，考核用客户业务结果（合规率、报销周期、差旅成本节省），而不是交付工时。</li><li><strong>把 AI 差旅助手 / 审批 agent 放到客户现场打磨</strong>：在客户真实数据上调 agent（改签、超标审批、发票核对），把通用部分沉淀为产品里的 MCP 连接器、配置化政策引擎和 skills。</li><li><strong>设「泛化率」指标</strong>：每季度统计现场代码有多少进入主干产品；长期偏低说明在做定制外包，应单独收费或收缩。</li><li><strong>先算账</strong>：按 Future Ventures 四问，算一名 FDE 的全成本 vs 客户年合同额与续约率；中小客户走标准化/自助，FDE 只给头部客户。</li><li><strong>人才来源与定位</strong>：从实施/交付团队里挑会写代码、能和客户财务/行政对话的人，给研发级别的职级与话语权——Palantir 当初正是靠给这类「被当作可替换帮手」的岗位正名（见 Tomek 文中引 a16z 的说法）。</li></ol>
+<p><strong>向未来（K-12 AI 教培）简述（观点）</strong>：学校/机构场景同样「每家略有不同」（教务系统、课表、家校沟通）。可让一名懂 AI 的老师/工程师驻校 2–4 周，把 AI 助教、备课工具落到真实课堂，再把共性抽成标准课件与模板——小团队即可，不必建 FDE 部门。</p>
+<hr>
+<p><strong>本期参考来源</strong>：Palantir 博客、YC Bob McGrew 访谈、eWeek、The Pragmatic Engineer、Anthropic 招聘页、a16z、Future Ventures、Tomek Chojnacki、Vlad Tudor、LinkedIn（均见文中链接）。</p>
+</section></article>
+</main>
+<footer class="site-footer"><div class="wrap">Tesla &amp; SpaceX 周报 · 每周更新</div></footer>
+</body>
+</html>

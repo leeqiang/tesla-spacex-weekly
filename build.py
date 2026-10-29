@@ -16,6 +16,7 @@ CONTENT = ROOT / "content"
 REPORTS = ROOT / "reports"
 ESSAYS = ROOT / "essays"
 SKILLS = ROOT / "skills"
+FDE = ROOT / "fde"
 SITE_TITLE = "Tesla & SpaceX 周报"
 DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
 ESSAY_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})(?:-.*)?$")
@@ -171,13 +172,17 @@ def convert(md, wrap_sections=True):
 
 
 def page(title, body, css_href, home_href="./", essays_href="essays/",
-         skills_href="skills/", back_href=None, back_label="← 返回"):
+         skills_href="skills/", back_href=None, back_label="← 返回",
+         fde_href=None):
+    if fde_href is None:
+        fde_href = home_href + "fde/"
     nav_links = (
         '<nav class="site-nav">'
         '<a href="%s">周报</a>'
         '<a href="%s">长文精读</a>'
         '<a href="%s">Skill 周推荐</a>'
-        "</nav>" % (home_href, essays_href, skills_href)
+        '<a href="%s">FDE 专栏</a>'
+        "</nav>" % (home_href, essays_href, skills_href, fde_href)
     )
     back = (
         '<a class="back" href="%s">%s</a>' % (back_href, html.escape(back_label))
@@ -342,12 +347,64 @@ def build_skills():
     return skills
 
 
+def build_fde():
+    FDE.mkdir(exist_ok=True)
+    items = []
+    for md_path in sorted(FDE.glob("*.md")):
+        stem = md_path.stem
+        date = essay_date(stem)
+        if not date:
+            print("skip (name is not YYYY-MM-DD or YYYY-MM-DD-...):", md_path.name)
+            continue
+        title, summary, body = convert(md_path.read_text(encoding="utf-8"))
+        title = title or stem
+        date_html = (
+            '<p class="date"><time datetime="%s">%s</time></p>' % (date, cn_date(date))
+        )
+        article = (
+            '<article class="report essay">'
+            "%s<h1>%s</h1>\n%s</article>" % (date_html, inline(title), body)
+        )
+        (FDE / ("%s.html" % stem)).write_text(
+            page(plain(title), article, "../assets/style.css",
+                 home_href="../", essays_href="../essays/", skills_href="../skills/", fde_href="./",
+                 back_href="./", back_label="← 全部 FDE 专栏"),
+            encoding="utf-8")
+        items.append((date, stem, plain(title), summary))
+        print("built fde/%s.html" % stem)
+
+    items.sort(key=lambda e: (e[0], e[1]), reverse=True)
+    parts = [
+        '<h1 class="site-title">FDE 专栏</h1>',
+        '<p class="tagline">Forward Deployed Engineer（前线部署工程师）专题：'
+        '角色起源、AI 公司为何在招、组织与经济账，以及对商旅 SaaS 团队的启示。</p>',
+    ]
+    if items:
+        parts.append('<ul class="report-list">')
+        for date, stem, title, _ in items:
+            parts.append(
+                '<li><a href="%s.html"><time datetime="%s">%s</time>'
+                '<span>%s</span></a></li>'
+                % (stem, date, date, html.escape(title))
+            )
+        parts.append("</ul>")
+    else:
+        parts.append("<p>暂无 FDE 专栏文章。</p>")
+    (FDE / "index.html").write_text(
+        page("FDE 专栏 · " + SITE_TITLE, "\n".join(parts), "../assets/style.css",
+             home_href="../", essays_href="../essays/", skills_href="../skills/", fde_href="./"),
+        encoding="utf-8")
+    print("built fde/index.html (%d fde)" % len(items))
+    return items
+
+
 def build_home(reports):
     parts = [
         '<h1 class="site-title">%s</h1>' % html.escape(SITE_TITLE),
         '<p class="tagline">每周一份的 Tesla 与 SpaceX 中文简报 · '
         '<a href="essays/">长文精读</a> · '
-        '<a href="skills/">Skill 周推荐</a></p>',
+        '<a href="skills/">Skill 周推荐</a> · '
+        '<a href="fde/">FDE 专栏</a></p>',
     ]
     reports = sorted(reports, key=lambda r: r[0], reverse=True)
     if reports:
@@ -377,6 +434,7 @@ def build():
     reports = build_reports()
     build_essays()
     build_skills()
+    build_fde()
     build_home(reports)
 
 
