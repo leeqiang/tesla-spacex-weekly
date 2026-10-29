@@ -377,7 +377,7 @@ def build_fde():
     parts = [
         '<h1 class="site-title">FDE 专栏</h1>',
         '<p class="tagline">Forward Deployed Engineer（前线部署工程师）专题：'
-        '角色起源、AI 公司为何在招、组织与经济账，以及对商旅 SaaS 团队的启示。</p>',
+        '追踪 FDE 圈最热的新闻、公司动作、热议文章与播客、争论和关键人物观点。</p>',
     ]
     if items:
         parts.append('<ul class="report-list">')
